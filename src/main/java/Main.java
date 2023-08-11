@@ -38,10 +38,9 @@ public class Main {
             throw new RuntimeException("Произошли неполадки!");
         }
 
-        System.out.print("\nПроверка addAll(Добавление в list , listTo): ");
         list.addAll(listTo);
-        System.out.println(list.size());
-        System.out.println(list.get(14));
+        System.out.println("\nПроверка addAll(Добавление в list , listTo): " + list.size() + "(size)");
+        printer.printElements(list);
 
         System.out.println("\nПроверка first(12) для listTo: " + listTo.first(12));
         System.out.println("Проверка last(13) для listTo: " + listTo.last(13));

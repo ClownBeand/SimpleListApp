@@ -10,6 +10,7 @@ public class PrinterElementImpl<T> implements PrinterElement<T> {
     public void printElements(SimpleList list) {
         IntStream.range(0, list.size())
                 .mapToObj(index -> list.get(index).orElse(null))
+                //.filter(item -> item != null)
                 .forEach(item -> System.out.print(item + " "));
 
         System.out.println();

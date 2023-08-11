@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.stream.IntStream;
+
 public class ArrayUtils {
     public static Object[] increaseSize(Object[] elements, int newSize) {
         if (elements.length == newSize) {
@@ -11,7 +13,7 @@ public class ArrayUtils {
     }
 
     public static Object[] decreaseSizeOne(Object[] elements, int indexRemove) {
-        Object[] newElements = new Object[elements.length - 1];
+/*        Object[] newElements = new Object[elements.length - 1];
         int targetIndex = 0;
 
         for (int i = 0; i < elements.length; i++) {
@@ -20,8 +22,12 @@ public class ArrayUtils {
             }
             newElements[targetIndex] = elements[i];
             targetIndex++;
-        }
+        }*/
 
+        Object[] newElements = IntStream.range(0, elements.length)
+                .filter(i -> i != indexRemove)
+                .mapToObj(i -> elements[i])
+                .toArray();
         return newElements;
     }
 
