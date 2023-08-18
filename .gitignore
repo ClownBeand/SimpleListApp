@@ -3,6 +3,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Log files
+*.log
+
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
@@ -11,7 +14,6 @@ target/
 *.iws
 *.iml
 *.ipr
-.gitattributes
 
 ### Eclipse ###
 .apt_generated
