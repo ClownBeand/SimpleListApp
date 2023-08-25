@@ -1,8 +1,8 @@
-package impl.template;
+package service.impl;
 
 import utils.ArrayUtils;
 import utils.CheckIndex;
-import impl.SimpleList;
+import service.SimpleList;
 import utils.ComparisonUtils;
 
 import java.util.Comparator;

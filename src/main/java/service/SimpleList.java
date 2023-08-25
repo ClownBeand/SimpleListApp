@@ -1,4 +1,4 @@
-package impl;
+package service;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -27,5 +27,4 @@ public interface SimpleList<T> {
     SimpleList<T> shuffle();
 
     SimpleList<T> sort(Comparator<T> comparator);
-
 }
