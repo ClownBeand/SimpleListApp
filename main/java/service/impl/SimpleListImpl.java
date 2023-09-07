@@ -1,9 +1,6 @@
 package service.impl;
 
-import utils.ArrayUtils;
-import utils.CheckIndex;
 import service.SimpleList;
-import utils.ComparisonUtils;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -15,6 +12,7 @@ public class SimpleListImpl<T> implements SimpleList<T> {
     private Object[] elements;
     private int size;
 
+    
     public SimpleListImpl() {
         size = 1;
         elements = new Object[size];
@@ -27,7 +25,11 @@ public class SimpleListImpl<T> implements SimpleList<T> {
 
     @Override
     public void add(T element) {
-        elements = ArrayUtils.increaseSize(elements, size);
+    	 if (elements.length == size) {
+             Object[] newElements = new Object[size * 2];
+             System.arraycopy(elements, 0, newElements, 0, elements.length);
+             elements = newElements;
+         }
         elements[size] = element;
 
         size++;
@@ -35,13 +37,16 @@ public class SimpleListImpl<T> implements SimpleList<T> {
 
     @Override
     public void insert(int index, T element) {
-        CheckIndex.validate(index, size);
-        elements = ArrayUtils.increaseSize(elements, size);
-
-        // сдвиг элементов для получения свободного места.
-        /*        for (int i = size - 1; i >= index; i--) {
-            elements[i + 1] = elements[i];
-        }*/
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is out of bounds.");
+        }
+        
+        if (elements.length == size) {
+            Object[] newElements = new Object[size * 2];
+            System.arraycopy(elements, 0, newElements, 0, elements.length);
+            elements = newElements;
+        }
+        
         Object[] newArray = new Object[size + 1];
         IntStream.range(0, index)
                 .forEach(i -> newArray[i] = elements[i]);
@@ -54,15 +59,22 @@ public class SimpleListImpl<T> implements SimpleList<T> {
 
     @Override
     public void remove(int index) {
-        CheckIndex.validate(index, size);
-        elements = ArrayUtils.decreaseSizeOne(elements, index);
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is out of bounds.");
+        }
+        elements = IntStream.range(0, elements.length)
+                .filter(i -> i != index)
+                .mapToObj(i -> elements[i])
+                .toArray();
 
         size--;
     }
 
     @Override
     public Optional<T> get(int index) {
-        CheckIndex.validate(index, size);
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index is out of bounds.");
+        }
         return Optional.ofNullable((T) elements[index]);
     }
 
@@ -70,16 +82,23 @@ public class SimpleListImpl<T> implements SimpleList<T> {
     public void addAll(SimpleList<T> list) {
         int newSize = size + list.size();
         if (newSize > elements.length) {
-            elements = ArrayUtils.increaseSize(elements, newSize);
+               Object[] newElements = new Object[newSize * 2];
+               System.arraycopy(elements, 0, newElements, 0, size);
+               elements = newElements;
+            
         }
 
+        
         IntStream.range(0, list.size())
-                .mapToObj(index -> list.get(index))
-                .forEach(item -> add((T) item));
-        /*
-        for (int i = 0; i < list.size(); i++) {
-            add((T) list.get(i));
-        }*/
+        .forEach(index -> {
+            Optional<T> item = list.get(index);
+            if (item.isPresent()) {
+                add(item.get());
+            }
+            else {
+                add(null); 
+            }
+        });
     }
 
     @Override
@@ -87,7 +106,7 @@ public class SimpleListImpl<T> implements SimpleList<T> {
         return IntStream.range(0, size)
                 .filter(index -> {
                     Optional<T> element = get(index);
-                    return element.isPresent() && ComparisonUtils.isEqual(element.get(), item);
+                    return element.isPresent() && element.get().equals(item);
                 })
                 .findFirst()
                 .orElse(-1);
@@ -95,18 +114,11 @@ public class SimpleListImpl<T> implements SimpleList<T> {
 
     @Override
     public int last(T item) {
-/*        for (int i = size - 1; i >= 0; i--) {
-            if (ComparisonUtils.isEqual(elements[i], item)) {
-                return i;
-            }
-        }
-        return -1; // если элемент не найден*/
-
         return IntStream.range(0, size - 1)
                 .mapToObj(index -> size - 1 - index)
                 .filter(index -> {
                     Optional<T> element = get(index);
-                    return element.isPresent() && ComparisonUtils.isEqual(element.get(), item);
+                    return element.isPresent() && element.get().equals(item);
                 })
                 .findFirst()
                 .orElse(-1);
@@ -119,13 +131,6 @@ public class SimpleListImpl<T> implements SimpleList<T> {
 
     @Override
     public boolean contains(T item) {
-/*        for (var element : elements) {
-            if ((element == null && item == null) ||
-                    (element != null && element.equals(item))) {
-                return true;
-            }
-        }*/
-        /* return false;*/
         return Stream.of(elements)
                 .anyMatch(element -> (element == null && item == null) ||
                         (element != null && element.equals(item)));
@@ -134,15 +139,14 @@ public class SimpleListImpl<T> implements SimpleList<T> {
     @Override
     public SimpleList<T> shuffle() {
         Random rand = new Random();
-/*        for (int i = size - 1; i > 0; i--) {
-            int j = rand.nextInt(i + 1);
-            ArrayUtils.swap(elements, i, j);
-        }*/
 
         IntStream.range(0, size - 1)
                 .forEach(i -> {
                     int j = rand.nextInt(i + 1);
-                    ArrayUtils.swap(elements, i, j);
+                    Object temp = elements[i];
+                    elements[i] = elements[j];
+                    elements[j] = temp;
+                    
                 });
 
         return this;
@@ -150,9 +154,6 @@ public class SimpleListImpl<T> implements SimpleList<T> {
 
     @Override
     public SimpleList<T> sort(Comparator<T> comparator) {
-/*        for (int i = 0; i < size - 1; i++) {
-            int minIndex = i;*/
-
         IntStream.range(0, size - 1)
                 .forEach(i -> {
                     int minIndex = i;
@@ -166,7 +167,10 @@ public class SimpleListImpl<T> implements SimpleList<T> {
                             minIndex = j;
                         }
                     }
-                    ArrayUtils.swap(elements, i, minIndex);
+                    Object temp = elements[i];
+                    elements[i] = elements[minIndex];
+                    elements[minIndex] = temp;
+                    
                 });
         return this;
     }
