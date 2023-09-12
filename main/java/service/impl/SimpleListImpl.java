@@ -14,7 +14,7 @@ public class SimpleListImpl<T> implements SimpleList<T> {
 
     
     public SimpleListImpl() {
-        size = 1;
+        size = 10;
         elements = new Object[size];
     }
 
