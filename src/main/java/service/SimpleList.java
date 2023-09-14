@@ -12,7 +12,7 @@ public interface SimpleList<T> {
 
     void remove(int index) throws Exception;
 
-    Optional<T> get(int index);
+    Optional<T>  get(int index);
 
     void addAll(SimpleList<T> list);
 
