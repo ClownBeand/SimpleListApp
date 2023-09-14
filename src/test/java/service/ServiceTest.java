@@ -1,11 +1,12 @@
+package service;
 
-import org.junit.Test;
-import org.junit.Before;
 import static org.junit.Assert.*;
 
 import java.util.stream.IntStream;
 
-import service.SimpleList;
+import org.junit.Before;
+import org.junit.Test;
+
 import service.impl.SimpleListImpl;
 
 public class ServiceTest {

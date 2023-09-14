@@ -25,7 +25,7 @@ public class SimpleListImpl<T> implements SimpleList<T> {
     }
 
     public SimpleListImpl() {
-        //int DEFAULT_CAPACITY = 10;
+        // int DEFAULT_CAPACITY = 10;
         this.elements = DEFAULT_CAPACITY_EMPTY;
     }
 
@@ -83,7 +83,7 @@ public class SimpleListImpl<T> implements SimpleList<T> {
     }
 
     @Override
-    public Optional<T>  get(int index) {
+    public Optional<T> get(int index) {
         rangeCheckForAdd(index);
         return Optional.ofNullable((T) elements[index]);
     }
@@ -179,8 +179,9 @@ public class SimpleListImpl<T> implements SimpleList<T> {
             return elements;
         }
     }
-    //int DEFAULT_CAPACITY = 10;
-    //return elements = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+
+    // int DEFAULT_CAPACITY = 10;
+    // return elements = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
     private Object[] grow() {
         return grow(size + 1);
     }
